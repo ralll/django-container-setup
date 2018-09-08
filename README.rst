@@ -12,11 +12,13 @@ For the first contact with containers developers, this repository offers one of 
 
 After understanding the basic container development process, the developer can use his own proces or go further and start using some container orchestrator.
 
-******************
+
 Index
-******************
+####################
+
 
 Command line environment reference.
+------------------------------------
 
 `Preparation`_
 
@@ -28,88 +30,27 @@ Command line environment reference.
 
 `Production`_
 
-#######################################
-Steps details
-#######################################
 
-The procedures of development were divided in Steps. Each step has its own configurations and purpose, as describe bellow.
+Steps detailed information
+------------------------------------
 
-To define, just include the ``--settings`` option in the django commands. Examples:
-
-.. code-block:: bash
-
-  python manage.py runserver --settings=portal.settings.development
-
-  python manage.py runserver migrate --settings=portal.settings.testing
-
-  python manage.py makemigrations --settings=portal.settings.staging
-
-  python manage.py createsuper user --email some@address.com --username some_name --settings=portal.setttings.deployment
+`Steps details`_
 
 
-******************
-Development step
-******************
-  For writing code.
+Utilities
+------------------------------------
 
-* **Server environment:** local host.
-* **Dinamic server:** django test webserver.
-* **Static server:** django test webserver.
-* **Reverse proxy:** No.
-* **Database:** sqlite3.
-* **Network:** HTTP localhost.
-* **Container inteface**: no.
+`Create secrets`_
 
-******************
-Testing step
-******************
-  For testing the code in the container, local machine.
+`Folder tree`_
 
-* **Server environment:** localhost.
-* **Dinamic server:** Nginx.
-* **Static server:** Gunicorn.
-* **Reverse proxy:**  Nginx.
-* **Database:** Postgres.
-* **Network:** HTTP (local network).
-* **Container inteface**: docker cli (command line interface).
 
-******************
-Staging step
-******************
-  **warning:** This step will be finished soon...
-
-  For testing the code in the container, included with internet access, in the remote server.
-
-* **Server environment:** provider (Like Digital Ocean).
-* **Dinamic server:** Nginx.
-* **Static server:** Gunicorn.
-* **Reverse proxy:**  Nginx.
-* **Database:** Postgres.
-* **Network:** HTTPS (Internet).
-* **Container inteface**: docker-machine.
-
-******************
-Production step
-******************
-  **warning:** This step will be finished soon...
-
-  For deployment in the remote server.
-
-* **Server environment:** provider (Like Digital Ocean).
-* **Dinamic server:** Nginx.
-* **Static server:** Gunicorn.
-* **Reverse proxy:**  Nginx.
-* **Database:** Postgres.
-* **Network:** HTTPS (Internet).
-* **Container inteface**: docker-machine.
-
-#######################################
 Command line sequence
 #######################################
 
-******************
+
 Preparation
-******************
+------------------------------------
 
 Execute preparation commands before the environments commands bellow.
 
@@ -145,10 +86,10 @@ Execute preparation commands before the environments commands bellow.
 
 
 Folder tree
-================
+------------------------------------
 
 The main directories:
-------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 The repository is organized with one folder for django files ``code/``, and other to environment files ``environment/``.
 
@@ -163,7 +104,7 @@ The repository is organized with one folder for django files ``code/``, and othe
     └── .gitignore
 
 The full directories tree:
-------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After clonning the repository, the structure of directories and files will be like bellow.
 
@@ -210,8 +151,10 @@ After clonning the repository, the structure of directories and files will be li
     ├── .dockerignore
     └── .gitignore
 
+Index_
+
 Create secrets
-=====================
+-----------------
 
 Run the command bellow to create the SECRET_KEY and SECRET_DB variables.
 
@@ -239,13 +182,15 @@ If django is NOT installed, the message will be:
   the SECRET_KEY was NOT set.
   the SECRET_DB was NOT set.
 
-******************
+Index_
+
+
 Development
-******************
+-----------------
 
   **warning:** Run the commands from the ``code`` directory.
 
-The secrets need to be created. See `Create secrets`_
+The secrets need to be created. See `Create secrets`_.
 
 .. code-block:: bash
 
@@ -262,7 +207,7 @@ default mesage of the django webserver.
 
 
 Create an app
-================
+~~~~~~~~~~~~~~~~~~~~~~
 
 If everything works fine, it's time to create an app.
 
@@ -272,18 +217,19 @@ If everything works fine, it's time to create an app.
   django-admin startapp app_name
 
 Write code
-==========
+~~~~~~~~~~~~~~~~~~~~~~
 
 With the development server working, it is time to write code.
 
-******************
+Index_
+
 Testing
-******************
+-----------------
 
   **warning:** The django commands should be run from the ``code`` directory,
   The environment commands from the root project directory.
 
-The secrets need to be created. See `Create secrets`_
+The secrets need to be created. See `Create secrets`_.
 
 .. code-block:: bash
 
@@ -318,9 +264,11 @@ The secrets need to be created. See `Create secrets`_
 Then check in your browser the address `localhost <http://localhost/>`_ the
 default mesage of the django webserver.
 
-******************
+Index_
+
+
 Staging
-******************
+-----------------
 
 The purpose of this step is to test the code in a remote provider.
 
@@ -328,10 +276,10 @@ The DNS and domain should be configured after create droplet.
 
 I'll be used **Digital Ocean** as an example.
 
-The secrets need to be created. See `Create secrets`_
+The secrets need to be created. See `Create secrets`_.
 
 Access Digital Ocean
-=====================
+~~~~~~~~~~~~~~~~~~~~~~
 
 After obtain the Digital Ocean Token API from your account configurations,
 run the commands bellow to create a droplet.
@@ -346,14 +294,14 @@ run the commands bellow to create a droplet.
 
 
 Obtain the Let's Encrypt autentication files
-============================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Follow the steps in this `repository <https://gitlab.com/raill/lets-encrypt-certificate-from-container/>`_ to obtain the certificates files.
 
 Copy the folder ``live/`` The from the folder tree ``_data/live/some_domain_example.com/`` to the docker volume with letsencrypt.
 
 Insert the domain
-============================================
+~~~~~~~~~~~~~~~~~~~~~~
 
 Change the **EXAMPLE.COM** to the project domain in the files:
 
@@ -361,7 +309,7 @@ Change the **EXAMPLE.COM** to the project domain in the files:
 
 
 docker container commands
-==========================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -390,7 +338,7 @@ docker container commands
   Remember to move the certificates to ``/etc/letsencrypt``.
 
 Removing droplet
-==========================
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -400,10 +348,11 @@ Removing droplet
   # Remove droplet
   docker-machine rm staging
 
+Index_
 
-******************
+
 Production
-******************
+-----------------
 
 The purpose of this step is to deploy the service.
 
@@ -411,10 +360,10 @@ The DNS and domain should be configured after create droplet.
 
 I'll be used **Digital Ocean** as an example.
 
-The secrets need to be created. See `Create secrets`_
+The secrets need to be created. See `Create secrets`_.
 
 Access Digital Ocean
-=====================
+~~~~~~~~~~~~~~~~~~~~~~
 
 After obtain the Digital Ocean Token API from your account configurations,
 run the commands bellow to create a droplet.
@@ -429,14 +378,14 @@ run the commands bellow to create a droplet.
 
 
 Obtain the Let's Encrypt autentication files
-============================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Follow the steps in this `repository <https://gitlab.com/raill/lets-encrypt-certificate-from-container/>`_ to obtain the certificates files.
 
 Copy the folder ``live/`` The from the folder tree ``_data/live/some_domain_example.com/`` to the docker volume with letsencrypt.
 
 Insert the domain
-============================================
+~~~~~~~~~~~~~~~~~~~~~~
 
 Change the **EXAMPLE.COM** to the project domain in the files:
 
@@ -444,7 +393,7 @@ Change the **EXAMPLE.COM** to the project domain in the files:
 
 
 docker container commands
-==========================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -473,7 +422,7 @@ docker container commands
   Remember to move the certificates to ``/etc/letsencrypt``.
 
 Removing droplet
-==========================
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -482,3 +431,79 @@ Removing droplet
 
   # Remove droplet
   docker-machine rm production
+
+Index_
+
+Steps details
+#######################################
+
+The procedures of development were divided in Steps. Each step has its own configurations and purpose, as describe bellow.
+
+To define, just include the ``--settings`` option in the django commands. Examples:
+
+.. code-block:: bash
+
+  python manage.py runserver --settings=portal.settings.development
+
+  python manage.py runserver migrate --settings=portal.settings.testing
+
+  python manage.py makemigrations --settings=portal.settings.staging
+
+  python manage.py createsuper user --email some@address.com --username some_name --settings=portal.setttings.deployment
+
+
+
+Development step
+-----------------
+  For writing code.
+
+* **Server environment:** local host.
+* **Dinamic server:** django test webserver.
+* **Static server:** django test webserver.
+* **Reverse proxy:** No.
+* **Database:** sqlite3.
+* **Network:** HTTP localhost.
+* **Container inteface**: no.
+
+
+Testing step
+-----------------
+  For testing the code in the container, local machine.
+
+* **Server environment:** localhost.
+* **Dinamic server:** Nginx.
+* **Static server:** Gunicorn.
+* **Reverse proxy:**  Nginx.
+* **Database:** Postgres.
+* **Network:** HTTP (local network).
+* **Container inteface**: docker cli (command line interface).
+
+
+Staging step
+-----------------
+
+  For testing the code in the container, included with internet access, in the remote server.
+
+* **Server environment:** provider (Like Digital Ocean).
+* **Dinamic server:** Nginx.
+* **Static server:** Gunicorn.
+* **Reverse proxy:**  Nginx.
+* **Database:** Postgres.
+* **Network:** HTTPS (Internet).
+* **Container inteface**: docker-machine.
+
+
+Production step
+-----------------
+
+  For deployment in the remote server.
+
+* **Server environment:** provider (Like Digital Ocean).
+* **Dinamic server:** Nginx.
+* **Static server:** Gunicorn.
+* **Reverse proxy:**  Nginx.
+* **Database:** Postgres.
+* **Network:** HTTPS (Internet).
+* **Container inteface**: docker-machine.
+
+Index_
