@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:10.4
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: '${SECRET_DB}'
+      POSTGRES_USER: production_db_user
+      POSTGRES_DB: production_db
+    volumes:
+      - production_db:/var/lib/postgresql/data
+  static:
+    image: nginx_static_production
+    container_name: static
+  proxy:
+    image: nginx_proxy_production
+    container_name: proxy
+    volumes:
+      - letsencrypt:/etc/letsencrypt/:ro
+    ports:
+        - 80:80
+        - 443:443
+    depends_on:
+      - web
+      - static
+  web:
+    image: django_production
+    container_name: web
+    depends_on:
+      - db
+    environment:
+      - SECRET_KEY
+      - SECRET_DB
+volumes:
+  production_db:
+  letsencrypt:

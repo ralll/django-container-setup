@@ -1,0 +1,6 @@
+.git
+.gitignore
+README.rst
+db.sqlite3
+environment/secrets
+__pycache__/

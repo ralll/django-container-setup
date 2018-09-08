@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:10.4
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: testing_password
+      POSTGRES_USER: testing_user
+      POSTGRES_DB: testing_db_name
+    volumes:
+      - testing_db:/var/lib/postgresql/data
+  static:
+    image: nginx_static_testing
+    container_name: static
+  proxy:
+    image: nginx_proxy_testing
+    container_name: proxy
+    ports:
+        - 80:80
+    depends_on:
+      - web
+      - static
+  web:
+    image: django_testing
+    container_name: web
+    depends_on:
+      - db
+volumes:
+  testing_db:
