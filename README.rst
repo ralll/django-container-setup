@@ -6,155 +6,137 @@ For a beginner django user may be hard to start using containers. Besides having
 
 This base project is configured with Postgres as database, Gunicorn as dinamic server, and Nginx as static server and reverse proxy.
 
-The developer just need to clone this repository, to create the apps and associate them to the **portal** project, and run the dockerfile, docker-compose and docker-machine commands.
+To use, the developer need to clone this repository, to create the apps and associate them to the **portal** django project, and run the dockerfile, docker-compose and docker-machine commands.
 
 For the first contact with containers developers, this repository offers one of the possible options of deployment a simple django project in containers, to serve as base in the process of learning of the docker tool.
 
-After understanding the basic container development process, the developer can use his own proces or go further and start using some container orchestrator.
+After understanding the basic container development process, the developer can use his own process or go further and start using some container orchestrator.
 
+***************************
+Release notes version 1.1.0
+***************************
 
-Index
-####################
+Changes
+=======
 
+Change the python environment manager from **venv** to **pipenv**.
 
-Command line environment reference.
-------------------------------------
+Removed the **testing step**. TDD approach, testing in all steps.
 
-`Preparation`_
+Reduced from two to one **nginx container**.
 
-`Development`_
+Docker images versions and other minor updates.
 
-`Testing`_
+Requirements
+============
 
-`Staging`_
+Python installed in the host (developer computer).
 
-`Production`_
+Linux Operating System on the host. For Windows or Mac, small adjustments are needed.
 
+VPS (Virtual Private Server) provider.
 
-Steps detailed information
-------------------------------------
+Docker-engine installed on server.
 
-`Steps details`_
+Docker-machine installed on host.
 
+Domain Address (like www.example.com).
 
-Utilities
-------------------------------------
-
-`Create secrets`_
-
-`Folder tree`_
-
-
-Command line sequence
-#######################################
-
-
+***********
 Preparation
-------------------------------------
+***********
 
-Execute preparation commands before the environments commands bellow.
+Enter the folder of the source code. Create a python environment and clone the repository.
 
 .. code-block:: bash
 
-  # Create a folder for python environments.
-  mkdir ~/.envs
-  cd ~/.envs/
-
-  # Create a virtualenv name "portal".
-  python -m venv portal
-  mkdir portal/source
-  cd portal/source
-  source ../bin/activate
+  # Create a virtualenv
+  pipenv install
 
   # Git configurations.
-  git config user.email "user@example.com"
-  git config user.name "User Name"
+  git config --local user.email "user@example.com"
+  git config --local user.name "User Name"
 
   # Download the code from the repository.
-  git clone git@gitlab.com:raill/django_container_setup.git .
+  git clone https://gitlab.com/raill/django_container_setup.git
 
-  # Remove existing git data.
-  rm -rf .git
+  # Remove the README information.
   echo "" > README.rst
 
-  # git configurations.
-  git init
-  git add .dockerignore .gitignore README.rst code/ environment
-  git commit -m "Project started."
-  git remote add origin git@gitlab.com:some_user/project_name.git
-  git push --set-upstream -u origin master
-
-
+***********
 Folder tree
-------------------------------------
+***********
 
-The main directories:
-~~~~~~~~~~~~~~~~~~~~~~
+The main directories
+====================
 
 The repository is organized with one folder for django files ``code/``, and other to environment files ``environment/``.
 
-::
+The static folder only appears after the ``python manage.py collectstatic`` command be executed.
 
-    project
-    .
-    ├── code
-    ├── environment
-    ├── README.rst
-    ├── .dockerignore
-    └── .gitignore
+.. code-block:: bash
 
-The full directories tree:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  .
+  ├── code              # application code.
+  │   ├── dev-static    # static files in development.
+  │   ├── manage.py
+  │   ├── Pipfile       # pipenv configuration file.
+  │   ├── Pipfile.lock  # pipenv configuration file.
+  │   └── portal        # Django project.
+  ├── environment       # Containers and key generation.
+  │   ├── containers
+  │   └── secrets
+  ├── letsencrypt        # Cetificate keys.
+  ├── README.rst
+  ├── stag-static       # static files in staging.
+  └── static            # static files in produciton.
+
+The full directories tree
+=========================
 
 After clonning the repository, the structure of directories and files will be like bellow.
 
-::
+.. code-block:: bash
 
-    project
-    .
-    ├── code
-    │   ├── db.sqlite3
-    │   ├── manage.py
-    │   └── portal
-    │       ├── settings
-    │       │   ├── __init__.py
-    │       │   ├── base.py
-    │       │   ├── development.py
-    │       │   ├── staging.py
-    │       │   └── testing.py
-    │       ├── urls.py
-    │       └── wsgi.py
-    ├── environment
-    │   ├── requirements
-    │   │   ├── base.pip
-    │   │   ├── development.pip
-    │   │   ├── production.pip
-    │   │   ├── staging.pip
-    │   │   └── testing.pip
-    │   ├── secrets
-    │   │   ├── assign_secrets.sh
-    │   │   └── create_secrets.py
-    │   ├── staging
-    │   │   ├── django.dockerfile
-    │   │   ├── docker-compose.yml
-    │   │   ├── nginx_proxy.conf
-    │   │   ├── nginx_proxy.dockerfile
-    │   │   ├── nginx_static.conf
-    │   │   └── nginx_static.dockerfile
-    │   └── testing
-    │       ├── django.dockerfile
-    │       ├── docker-compose.yml
-    │       ├── nginx.conf
-    │       ├── nginx_proxy.dockerfile
-    │       └── nginx_static.dockerfile
-    ├── README.rst
-    ├── .dockerignore
-    └── .gitignore
 
-Index_
+  .
+  ├── code
+  │   ├── dev-static
+  │   ├── manage.py
+  │   ├── Pipfile
+  │   ├── Pipfile.lock
+  │   └── portal
+  │       ├── db.sqlite3
+  │       ├── __init__.py
+  │       ├── settings
+  │       │   ├── base.py
+  │       │   ├── dev.py
+  │       │   ├── __init__.py
+  │       │   ├── prod.py
+  │       │   └── stag.py
+  │       ├── urls.py
+  │       └── wsgi.py
+  ├── environment
+  │   ├── containers
+  │   │   ├── django-dev.dockerfile
+  │   │   ├── django-prod.dockerfile
+  │   │   ├── django-stag.dockerfile
+  │   │   ├── docker-compose-prod.yml
+  │   │   ├── docker-compose-stag.yml
+  │   │   ├── nginx-prod.conf
+  │   │   ├── nginx-prod.dockerfile
+  │   │   ├── nginx-stag.conf
+  │   │   └── nginx-stag.dockerfile
+  │   └── secrets
+  │       ├── assign_secrets.sh
+  │       └── create_secrets.py
+  ├── letsencrypt
+  ├── README.rst
+  ├── stag-static
+  └── static
 
 Create secrets
------------------
+==============
 
 Run the command bellow to create the SECRET_KEY and SECRET_DB variables.
 
@@ -170,6 +152,7 @@ The command should be run inside assign_secrets.sh and create_secrets.py folder.
     the SECRET_KEY was set.
     the SECRET_DB was set.
 
+  # Return to root folder.
   cd ../..
 
 If django is NOT installed, the message will be:
@@ -182,32 +165,78 @@ If django is NOT installed, the message will be:
   the SECRET_KEY was NOT set.
   the SECRET_DB was NOT set.
 
-Index_
+Steps details
+=============
 
+The procedures of development were divided in Steps. Each step has its own configurations and purpose, as describe in each section.
 
-Development
------------------
+To define, just include the ``--settings`` option in the django commands.
 
-  **warning:** Run the commands from the ``code`` directory.
+The default **setting** is **production**. So it isn't necessary to use the ``--settings`` flag.
 
-The secrets need to be created. See `Create secrets`_.
+Examples:
 
 .. code-block:: bash
 
-  pip install -r ../environment/requirements/development.pip
-
-  python manage.py makemigrations --settings=portal.settings.development
+  python manage.py runserver --settings=portal.settings.development
 
   python manage.py migrate --settings=portal.settings.development
 
-  python manage.py runserver --settings=portal.settings.development
+  python manage.py makemigrations --settings=portal.settings.staging
+
+  # The production is the default settings.
+  python manage.py createsuper user --email some@address.com --username admin
+
+***********
+Development
+***********
+
+The purpose of **development step** is write code.
+
+    **Server environment**: local computer.
+
+    **Dinamic server**: django test webserver.
+
+    **Static server**: django test webserver.
+
+    **Reverse proxy**: No.
+
+    **Database**: sqlite3.
+
+    **Network**: HTTP localhost.
+
+    **Container inteface**: no.
+
+Check the development settings
+==============================
+
+.. note:: Run the commands from the ``code`` directory.
+
+The secrets need to be created. See **Create secrets** section.
+
+The commands above will run the django project in development settings.
+
+.. code-block:: bash
+
+  # Install the packages.
+  pipenv install 
+
+  python manage.py collectstatic --settings=portal.settings.dev
+  python manage.py makemigrations --settings=portal.settings.dev
+  python manage.py migrate --settings=portal.settings.dev
+  python manage.py runserver --settings=portal.settings.dev
 
 Then check in your browser the address `localhost:8000 <http://localhost:8000/>`_ the
 default mesage of the django webserver.
 
+To create the admin, run the command bellow.
+
+.. code-block:: bash
+
+  python manage.py createsuperuser --user admin --email admin@example.com --settings=portal.settings.dev
 
 Create an app
-~~~~~~~~~~~~~~~~~~~~~~
+=============
 
 If everything works fine, it's time to create an app.
 
@@ -217,212 +246,191 @@ If everything works fine, it's time to create an app.
   django-admin startapp app_name
 
 Write code
-~~~~~~~~~~~~~~~~~~~~~~
+==========
 
-With the development server working, it is time to write code.
+With the development server working, it is time to **write code** :)
 
-Index_
-
-Testing
------------------
-
-  **warning:** The django commands should be run from the ``code`` directory,
-  The environment commands from the root project directory.
-
-The secrets need to be created. See `Create secrets`_.
-
-.. code-block:: bash
-
-  ## FROM THE CODE DIRECTORY ##
-
-  # Collect static files.
-  cd code
-  python manage.py collectstatic --settings=portal.settings.development
-  cd ..
-
-  ## FROM THE ROOT PROJECT DIRECTORY ##
-
-  # Creating images
-  docker build -t django_testing -f environment/testing/django.dockerfile .
-
-  docker build -t nginx_static_testing -f environment/testing/nginx_static.dockerfile .
-
-  docker build -t nginx_proxy_testing -f environment/testing/nginx_proxy.dockerfile .
-
-  # Starting the services
-  docker-compose -f environment/testing/docker-compose.yml up --build -d
-
-  # Stoping the services
-  docker-compose -f environment/testing/docker-compose.yml stop
-
-  # Removing the containers
-  docker-compose -f environment/testing/docker-compose.yml rm
-
-  # Deleting images
-  docker rmi django_testing nginx_static_testing nginx_proxy_testing
-
-Then check in your browser the address `localhost <http://localhost/>`_ the
-default mesage of the django webserver.
-
-Index_
-
-
+*******
 Staging
------------------
+*******
 
-The purpose of this step is to test the code in a remote provider.
+The purpose of **staging step** is to check the application in a container configuration.
 
-The DNS and domain should be configured after create droplet.
+The secrets need to be created. See **Create secrets** section in this file.
 
-I'll be used **Digital Ocean** as an example.
+  **Server environment**: local computer.
+  
+  **Dinamic server**: Nginx.
 
-The secrets need to be created. See `Create secrets`_.
+  **Static server**: gunicorn.
 
-Access Digital Ocean
-~~~~~~~~~~~~~~~~~~~~~~
+  **Reverse proxy**:  Nginx.
 
-After obtain the Digital Ocean Token API from your account configurations,
-run the commands bellow to create a droplet.
+  **Database**: Postgres.
 
-.. code-block:: bash
+  **Network**: HTTP localhost.
 
-  DIGITAL_OCEAN_TOKEN='token_password_to_access_digital_ocean'
-
-  docker-machine create --driver digitalocean --digitalocean-access-token $DIGITAL_OCEAN_TOKEN staging
-
-  eval $(docker-machine env staging)
-
-
-Obtain the Let's Encrypt autentication files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Follow the steps in this `repository <https://gitlab.com/raill/lets-encrypt-certificate-from-container/>`_ to obtain the certificates files.
-
-Copy the folder ``live/`` The from the folder tree ``_data/live/some_domain_example.com/`` to the docker volume with letsencrypt.
-
-Insert the domain
-~~~~~~~~~~~~~~~~~~~~~~
-
-Change the **EXAMPLE.COM** to the project domain in the files:
-
-#. environment/staging/nginx_proxy.conf
-
+  **Container inteface**: docker-engine.
 
 docker container commands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
+
+Collect static
+--------------
+
+.. note:: Run the command inside the ``code`` folder.
+
+.. code-block:: bash
+
+  python manage.py collectstatic --settings=portal.settings.stag
+
+Create the images and the containers
+------------------------------------
+
+.. note:: Run the command from the ``root`` folder.
 
 .. code-block:: bash
 
   # Create django image
-  docker build -t django_staging -f environment/staging/django.dockerfile .
+  docker build -t django-stag -f environment/containers/django-stag.dockerfile .
+  
+  # Create nginx image
+  docker build -t nginx-stag -f environment/containers/nginx-stag.dockerfile .
+  
+  
+  # Run composed containers in background
+  docker-compose -p source -f environment/containers/docker-compose-stag.yml up -d
 
-  # Create nginx static and proxy images
-  docker build -t nginx_static_staging -f environment/staging/nginx_static.dockerfile .
+  # Stop containers
+  docker-compose -p source -f environment/containers/docker-compose-stag.yml stop
+  
+  # Remove containers
+  docker-compose -p source -f environment/containers/docker-compose-stag.yml rm
 
-  docker build -t nginx_proxy_staging -f environment/staging/nginx_proxy.dockerfile .
-
-  # Create composed containers
-  docker-compose -f environment/staging/docker-compose.yml up -d --build
-
-  # Stop composed containers
-  docker-compose -f environment/staging/docker-compose.yml stop
-
-  # Remove composed container
-  docker-compose -f environment/staging/docker-compose.yml rm
 
   # Remove images
-  docker rmi django_staging nginx_static_staging nginx_proxy_staging
-
-.
-
-  Remember to move the certificates to ``/etc/letsencrypt``.
-
-Removing droplet
-~~~~~~~~~~~~~~~~~~~~~~
-
+  docker rmi django-stag nginx-stag
+  
+  # Remove volume
+  docker volume rmi source_db-web
+  
+Create the django admin access
+------------------------------- 
+  
 .. code-block:: bash
 
-  # Stop droplet
-  docker-machine stop staging
-
-  # Remove droplet
-  docker-machine rm staging
-
-Index_
+  docker exec -it blog bash
+  
+  python manage.py createsuperuser --user admin --email admin@local.host --settings=portal.settings.stag
 
 
+**********
 Production
------------------
+**********
 
-The purpose of this step is to deploy the service.
+The purpose of **Production step** is to deploy the service.
 
-The DNS and domain should be configured after create droplet.
+The **DNS and domain** should be configured after create droplet.
 
 I'll be used **Digital Ocean** as an example.
 
-The secrets need to be created. See `Create secrets`_.
+The secrets need to be created. See **Create secrets** section in this file.
+ 
+  **Server environment**: provider (Like Digital Ocean).
+
+  **Dinamic server**: Nginx.
+
+  **Static server**: Gunicorn.
+
+  **Reverse proxy**:  Nginx.
+
+  **Database**: Postgres.
+
+  **Network**: HTTPS (Internet).
+ 
+  **Container inteface**: docker-machine.
+
+Obtain the Let's Encrypt autentication files
+============================================
+
+Follow the steps in this `repository <https://gitlab.com/raill/lets-encrypt-certificate-from-container/>`_ to obtain the certificates files.
+
+Copy the folder ``live/`` to the letsencrypt folder in the root directory.
+
+Collect static
+==============
+
+.. note:: Run the command inside the ``code`` folder.
+
+.. code-block:: bash
+
+  python manage.py collectstatic
 
 Access Digital Ocean
-~~~~~~~~~~~~~~~~~~~~~~
+====================
 
 After obtain the Digital Ocean Token API from your account configurations,
 run the commands bellow to create a droplet.
 
 .. code-block:: bash
-
-  DIGITAL_OCEAN_TOKEN='token_password_to_access_digital_ocean'
+  
+  # Insert your password between the single quotation marks.
+  DIGITAL_OCEAN_TOKEN='token_password_to_access_digital_ocean' 
 
   docker-machine create --driver digitalocean --digitalocean-access-token $DIGITAL_OCEAN_TOKEN production
 
   eval $(docker-machine env production)
 
+Insert the domain in nginx configurations
+=========================================
 
-Obtain the Let's Encrypt autentication files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Change the **EXAMPLE.COM** to the project domain in the file
 
-Follow the steps in this `repository <https://gitlab.com/raill/lets-encrypt-certificate-from-container/>`_ to obtain the certificates files.
-
-Copy the folder ``live/`` The from the folder tree ``_data/live/some_domain_example.com/`` to the docker volume with letsencrypt.
-
-Insert the domain
-~~~~~~~~~~~~~~~~~~~~~~
-
-Change the **EXAMPLE.COM** to the project domain in the files:
-
-#. environment/staging/nginx_proxy.conf
+``environment/staging/nginx-prod.conf``.
 
 
 docker container commands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
+
+.. note:: Run the command from the ``root`` folder.
 
 .. code-block:: bash
 
   # Create django image
-  docker build -t django_production -f environment/production/django.dockerfile .
+  docker build -t django-prod -f environment/containers/django-prod.dockerfile .
 
-  # Create nginx static and proxy images
-  docker build -t nginx_static_production -f environment/production/nginx_static.dockerfile .
+  # Create nginx image
+  docker build -t nginx-prod -f environment/containers/nginx-prod.dockerfile .
 
-  docker build -t nginx_proxy_production -f environment/production/nginx_proxy.dockerfile .
 
-  # Create composed containers
-  docker-compose -f environment/production/docker-compose.yml up -d --build
+  # Run composed containers in background
+  docker-compose -p source -f environment/containers/docker-compose-prod.yml up -d
 
-  # Stop composed containers
-  docker-compose -f environment/production/docker-compose.yml stop
+  # stop containers
+  docker-compose -p source -f environment/containers/docker-compose-prod.yml stop
 
-  # Remove composed container
-  docker-compose -f environment/production/docker-compose.yml rm
+  # Remove containers
+  docker-compose -p source -f environment/containers/docker-compose-prod.yml rm
 
   # Remove images
-  docker rmi django_production nginx_static_production nginx_proxy_production
+  docker rmi django-stag nginx-stag
 
-.
+  # Remove volume
+  docker volume rmi source_db-web
 
-  Remember to move the certificates to ``/etc/letsencrypt``.
+
+Create the django admin access
+------------------------------
+
+.. code-block:: bash
+
+  docker exec -it blog bash
+
+  python manage.py createsuperuser --user admin --email admin@example.com
+
 
 Removing droplet
-~~~~~~~~~~~~~~~~~~~~~~
+----------------
 
 .. code-block:: bash
 
@@ -431,79 +439,3 @@ Removing droplet
 
   # Remove droplet
   docker-machine rm production
-
-Index_
-
-Steps details
-#######################################
-
-The procedures of development were divided in Steps. Each step has its own configurations and purpose, as describe bellow.
-
-To define, just include the ``--settings`` option in the django commands. Examples:
-
-.. code-block:: bash
-
-  python manage.py runserver --settings=portal.settings.development
-
-  python manage.py runserver migrate --settings=portal.settings.testing
-
-  python manage.py makemigrations --settings=portal.settings.staging
-
-  python manage.py createsuper user --email some@address.com --username some_name --settings=portal.setttings.deployment
-
-
-
-Development step
------------------
-  For writing code.
-
-* **Server environment:** local host.
-* **Dinamic server:** django test webserver.
-* **Static server:** django test webserver.
-* **Reverse proxy:** No.
-* **Database:** sqlite3.
-* **Network:** HTTP localhost.
-* **Container inteface**: no.
-
-
-Testing step
------------------
-  For testing the code in the container, local machine.
-
-* **Server environment:** localhost.
-* **Dinamic server:** Nginx.
-* **Static server:** Gunicorn.
-* **Reverse proxy:**  Nginx.
-* **Database:** Postgres.
-* **Network:** HTTP (local network).
-* **Container inteface**: docker cli (command line interface).
-
-
-Staging step
------------------
-
-  For testing the code in the container, included with internet access, in the remote server.
-
-* **Server environment:** provider (Like Digital Ocean).
-* **Dinamic server:** Nginx.
-* **Static server:** Gunicorn.
-* **Reverse proxy:**  Nginx.
-* **Database:** Postgres.
-* **Network:** HTTPS (Internet).
-* **Container inteface**: docker-machine.
-
-
-Production step
------------------
-
-  For deployment in the remote server.
-
-* **Server environment:** provider (Like Digital Ocean).
-* **Dinamic server:** Nginx.
-* **Static server:** Gunicorn.
-* **Reverse proxy:**  Nginx.
-* **Database:** Postgres.
-* **Network:** HTTPS (Internet).
-* **Container inteface**: docker-machine.
-
-Index_
