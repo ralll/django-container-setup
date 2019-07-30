@@ -46,7 +46,7 @@ Domain Address (like www.example.com).
 Preparation
 ***********
 
-Enter the folder of the source code. Clone the repository.
+Clone the repository.
 
 .. code-block:: bash
 
@@ -57,8 +57,10 @@ Enter the folder of the source code. Clone the repository.
   # Download the code from the repository.
   git clone https://gitlab.com/raill/django_container_setup.git .
 
-  # Remove the README information.
-  echo "" > README.rst
+  # Remove the README and git folder.
+  rm -rf .git README.rst
+
+.. note:: Create a new git repository in the ``code`` folder, if you wish to control the versions of your code.
 
 Folder tree
 ===========
