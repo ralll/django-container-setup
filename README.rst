@@ -143,6 +143,9 @@ Create a python environment and install packages
   # Create a virtualenv
   pipenv install
 
+  # Start the pipenv shell interface
+  pipenv shell
+
 Create secrets
 ==============
 
