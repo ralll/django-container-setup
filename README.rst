@@ -189,11 +189,11 @@ Examples:
 
 .. code-block:: bash
 
-  python manage.py runserver --settings=portal.settings.development
+  python manage.py runserver --settings=portal.settings.dev
 
-  python manage.py migrate --settings=portal.settings.development
+  python manage.py migrate --settings=portal.settings.dev
 
-  python manage.py makemigrations --settings=portal.settings.staging
+  python manage.py makemigrations --settings=portal.settings.stag
 
   # The production is the default settings.
   python manage.py createsuper user --email some@address.com --username admin
