@@ -46,12 +46,9 @@ Domain Address (like www.example.com).
 Preparation
 ***********
 
-Enter the folder of the source code. Create a python environment and clone the repository.
+Enter the folder of the source code. Clone the repository.
 
 .. code-block:: bash
-
-  # Create a virtualenv
-  pipenv install
 
   # Git configurations.
   git config --local user.email "user@example.com"
@@ -63,12 +60,11 @@ Enter the folder of the source code. Create a python environment and clone the r
   # Remove the README information.
   echo "" > README.rst
 
-***********
 Folder tree
-***********
+===========
 
 The main directories
-====================
+--------------------
 
 The repository is organized with one folder for django files ``code/``, and other to environment files ``environment/``.
 
@@ -92,12 +88,11 @@ The static folder only appears after the ``python manage.py collectstatic`` comm
   └── static            # static files in produciton.
 
 The full directories tree
-=========================
+-------------------------
 
 After clonning the repository, the structure of directories and files will be like bellow.
 
 .. code-block:: bash
-
 
   .
   ├── code
@@ -134,6 +129,19 @@ After clonning the repository, the structure of directories and files will be li
   ├── README.rst
   ├── stag-static
   └── static
+
+
+Create a python environment and install packages 
+================================================
+
+.. note:: Run the command inside the ``code`` folder.
+
+.. code-block:: bash
+
+  cd code
+
+  # Create a virtualenv
+  pipenv install
 
 Create secrets
 ==============
