@@ -55,7 +55,7 @@ Enter the folder of the source code. Clone the repository.
   git config --local user.name "User Name"
 
   # Download the code from the repository.
-  git clone https://gitlab.com/raill/django_container_setup.git
+  git clone https://gitlab.com/raill/django_container_setup.git .
 
   # Remove the README information.
   echo "" > README.rst
