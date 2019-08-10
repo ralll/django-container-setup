@@ -2,30 +2,30 @@
 Django setup for container environment
 #######################################
 
-For a beginner django user may be hard to start using containers. Besides having to deal a with web server and static files, it is necessary to understand how the stack will work in containers.
+For a beginner Django user may be hard to start using containers. Besides having to deal with a web server and static files, it is necessary to understand how the stack will work in containers.
 
-This base project is configured with Postgres as database, Gunicorn as dinamic server, and Nginx as static server and reverse proxy.
+This base project is configured with Postgres as a database, Gunicorn as a dynamic server, and Nginx as static server and reverse proxy.
 
-To use, the developer need to clone this repository, to create the apps and associate them to the **portal** django project, and run the dockerfile, docker-compose and docker-machine commands.
+To use, the developer needs to clone this repository, to create the apps and associate them to the portal Django project. So it is time to run the dockerfile, docker-compose, and docker-machine commands.
 
-For the first contact with containers developers, this repository offers one of the possible options of deployment a simple django project in containers, to serve as base in the process of learning of the docker tool.
+For the first contact with containers developers, this repository offers one of the possible options of deployment a simple Django project in containers, to serve as a base in the process of learning of the docker tool.
 
-After understanding the basic container development process, the developer can use his own process or go further and start using some container orchestrator.
+After understanding the basic container development process, the developer can use his process or go further and start using some container orchestrator.
 
-***************************
-Release notes version 1.1.0
-***************************
+*****************************
+Release notes - version 1.1.1
+*****************************
 
 Changes
 =======
 
-Change the python environment manager from **venv** to **pipenv**.
+It was changed the python environment manager from **venv** to **pipenv**.
 
-Removed the **testing step**. TDD approach, testing in all steps.
+It was removed the **testing step**. TDD approach, testing in all steps.
 
-Reduced from two to one **nginx container**.
+It was reduced from two to one **nginx container**.
 
-Docker images versions and other minor updates.
+Docker images versions updated and other minor changes.
 
 Requirements
 ============
@@ -41,6 +41,24 @@ Docker-engine installed on server.
 Docker-machine installed on host.
 
 Domain Address (like www.example.com).
+
+********
+Road map
+********
+
+#. Traefic as reverse proxy.
+#. Ansible to automate VPN configurations.
+#. Swarm to deal with secrets and conf files.
+
+************
+Contribution
+************
+
+It is just a personal project to share experiences.
+
+Any issue reports are welcome, but it maybe takes a while to answer.
+
+New features are difficult to implement for a matter of priorities, but feel free to ask help.
 
 ***********
 Preparation
@@ -68,7 +86,7 @@ Folder tree
 The main directories
 --------------------
 
-The repository is organized with one folder for django files ``code/``, and other to environment files ``environment/``.
+The repository is organized with one folder for Django files ``code/``, and other to environment files ``environment/``.
 
 The static folder only appears after the ``python manage.py collectstatic`` command be executed.
 
@@ -92,7 +110,7 @@ The static folder only appears after the ``python manage.py collectstatic`` comm
 The full directories tree
 -------------------------
 
-After clonning the repository, the structure of directories and files will be like bellow.
+After cloning the repository, the structure of directories and files will be like below.
 
 .. code-block:: bash
 
@@ -151,7 +169,7 @@ Create a python environment and install packages
 Create secrets
 ==============
 
-Run the command bellow to create the SECRET_KEY and SECRET_DB variables.
+Run the command below to create the SECRET_KEY and SECRET_DB variables.
 
 The command should be run inside assign_secrets.sh and create_secrets.py folder.
 
@@ -168,7 +186,7 @@ The command should be run inside assign_secrets.sh and create_secrets.py folder.
   # Return to root folder.
   cd ../..
 
-If django is NOT installed, the message will be:
+If Django is NOT installed, the message will be:
 
 .. code-block:: bash
 
@@ -181,9 +199,9 @@ If django is NOT installed, the message will be:
 Steps details
 =============
 
-The procedures of development were divided in Steps. Each step has its own configurations and purpose, as describe in each section.
+The procedures of development were divided into steps. Each step has its own configurations and purpose, as described in each section.
 
-To define, just include the ``--settings`` option in the django commands.
+To define, just include the ``--settings`` option in the Django commands.
 
 The default **setting** is **production**. So it isn't necessary to use the ``--settings`` flag.
 
@@ -204,13 +222,13 @@ Examples:
 Development
 ***********
 
-The purpose of **development step** is write code.
+The purpose of the **development step** is to write code.
 
     **Server environment**: local computer.
 
-    **Dinamic server**: django test webserver.
+    **Dynamic server**: Django test webserver.
 
-    **Static server**: django test webserver.
+    **Static server**: Django test webserver.
 
     **Reverse proxy**: No.
 
@@ -218,7 +236,7 @@ The purpose of **development step** is write code.
 
     **Network**: HTTP localhost.
 
-    **Container inteface**: no.
+    **Container interface**: no.
 
 Check the development settings
 ==============================
@@ -227,7 +245,7 @@ Check the development settings
 
 The secrets need to be created. See **Create secrets** section.
 
-The commands above will run the django project in development settings.
+The commands above will run the Django project in development settings.
 
 .. code-block:: bash
 
@@ -240,9 +258,9 @@ The commands above will run the django project in development settings.
   python manage.py runserver --settings=portal.settings.dev
 
 Then check in your browser the address `localhost:8000 <http://localhost:8000/>`_ the
-default mesage of the django webserver.
+default mesage of the Django webserver.
 
-To create the admin, run the command bellow.
+To create the admin, run the command below.
 
 .. code-block:: bash
 
@@ -267,13 +285,13 @@ With the development server working, it is time to **write code** :)
 Staging
 *******
 
-The purpose of **staging step** is to check the application in a container configuration.
+The purpose of the **staging step** is to check the application in a container configuration.
 
 The secrets need to be created. See **Create secrets** section in this file.
 
   **Server environment**: local computer.
   
-  **Dinamic server**: Nginx.
+  **Dynamic server**: Nginx.
 
   **Static server**: gunicorn.
 
@@ -283,7 +301,7 @@ The secrets need to be created. See **Create secrets** section in this file.
 
   **Network**: HTTP localhost.
 
-  **Container inteface**: docker-engine.
+  **Container interface**: docker-engine.
 
 docker container commands
 =========================
@@ -327,7 +345,7 @@ Create the images and the containers
   # Remove volume
   docker volume rmi source_db-web
   
-Create the django admin access
+Create the Django admin access
 ------------------------------- 
   
 .. code-block:: bash
@@ -341,17 +359,17 @@ Create the django admin access
 Production
 **********
 
-The purpose of **Production step** is to deploy the service.
+The purpose of the **Production step** is to deploy the service.
 
-The **DNS and domain** should be configured after create droplet.
+The **DNS and domain** should be configured after create a droplet.
 
-I'll be used **Digital Ocean** as an example.
+I'll be used the **Digital Ocean** as an example.
 
 The secrets need to be created. See **Create secrets** section in this file.
  
   **Server environment**: provider (Like Digital Ocean).
 
-  **Dinamic server**: Nginx.
+  **Dynamic server**: Nginx.
 
   **Static server**: Gunicorn.
 
@@ -361,10 +379,10 @@ The secrets need to be created. See **Create secrets** section in this file.
 
   **Network**: HTTPS (Internet).
  
-  **Container inteface**: docker-machine.
+  **Container interface**: docker-machine.
 
-Obtain the Let's Encrypt autentication files
-============================================
+Obtain the Let's Encrypt authentication files
+=============================================
 
 Follow the steps in this `repository <https://gitlab.com/raill/lets-encrypt-certificate-from-container/>`_ to obtain the certificates files.
 
@@ -382,8 +400,8 @@ Collect static
 Access Digital Ocean
 ====================
 
-After obtain the Digital Ocean Token API from your account configurations,
-run the commands bellow to create a droplet.
+After obtaining the Digital Ocean Token API from your account configurations,
+run the commands below to create a droplet.
 
 .. code-block:: bash
   
@@ -394,8 +412,8 @@ run the commands bellow to create a droplet.
 
   eval $(docker-machine env production)
 
-Insert the domain in nginx configurations
-=========================================
+Include the domain in nginx configurations
+==========================================
 
 Change the **EXAMPLE.COM** to the project domain in the file
 
@@ -432,7 +450,7 @@ docker container commands
   docker volume rmi source_db-web
 
 
-Create the django admin access
+Create the Django admin access
 ------------------------------
 
 .. code-block:: bash
@@ -442,8 +460,8 @@ Create the django admin access
   python manage.py createsuperuser --user admin --email admin@example.com
 
 
-Removing droplet
-----------------
+Removing the droplet
+--------------------
 
 .. code-block:: bash
 
