@@ -4,14 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-django-behave = "*"
-selenium = "*"
-coverage = "*"
+selenium = "~=3.141"
+coverage = "~=4.5"
 
 [packages]
-django = "*"
-gunicorn = "*"
-psycopg2 = "*"
+django = "~=2.2"
+gunicorn = "~=19.9"
+psycopg2 = "~=2.8"
+behave = "~=1.2"
+selenium = "*"
+coverage = "~=4.5"
 
 [requires]
 python_version = "3.7"
